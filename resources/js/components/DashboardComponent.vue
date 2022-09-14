@@ -14,11 +14,11 @@
                                 <div class="flex items-center space-x-3">
                                     <div class="flex-shrink-0 h-12 w-12">
                                         <img class="h-12 w-12 rounded-full"
-                                            src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=256&h=256&q=80"
+                                            :src="profileIcon"
                                             alt="" />
                                     </div>
                                     <div class="space-y-1">
-                                        <div class="text-sm font-medium text-gray-900">Debbie Lewis</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ this.user.name }}</div>
                                         <a href="#" class="group flex items-center space-x-2.5">
                                             <svg class="h-5 w-5 text-gray-400 group-hover:text-gray-500"
                                                 aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
@@ -33,9 +33,7 @@
                                 </div>
                                 <!-- Action buttons -->
                                 <div class="flex flex-col sm:flex-row xl:flex-col">
-                                    <button type="button"
-                                        class="inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 xl:w-full">New
-                                        Project</button>
+
                                     <button type="button"
                                         class="mt-3 inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 xl:ml-0 xl:mt-3 xl:w-full">Invite
                                         Team</button>
@@ -50,7 +48,7 @@
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <CollectionIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-                                    <span class="text-sm text-gray-500 font-medium">8 Projects</span>
+                                    <span class="text-sm text-gray-500 font-medium">{{ projects.length }} Projects</span>
                                 </div>
                             </div>
                         </div>
@@ -157,6 +155,19 @@
                             </div>
                         </div>
                     </li>
+                    <div v-if="projects.length <= 0" class="text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                          <path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">No projects</h3>
+                        <p class="mt-1 text-sm text-gray-500">Get started by creating a new project.</p>
+                        <div class="mt-6">
+                          <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <PlusIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                            <a href="/project/create" style="all:unset;">New Project</a>
+                          </button>
+                        </div>
+                      </div>
                 </ul>
             </div>
         </div>
@@ -195,7 +206,21 @@
 </template>
 
 <script>
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import {
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuItems,
+    Dialog,
+    DialogOverlay,
+    DialogTitle,
+    TransitionChild,
+    TransitionRoot
+} from '@headlessui/vue'
+
 import {
     BadgeCheckIcon,
     ChevronDownIcon,
@@ -204,31 +229,29 @@ import {
     SearchIcon,
     SortAscendingIcon,
     StarIcon,
+    PlusIcon
 } from '@heroicons/vue/solid'
-import { MenuAlt1Icon, XIcon } from '@heroicons/vue/outline'
+import { MenuAlt1Icon, XIcon, ExclamationIcon } from '@heroicons/vue/outline'
 
-const navigation = [
-    { name: 'Dashboard', href: '#', current: true },
-    { name: 'Domains', href: '#', current: false },
-]
+
 const userNavigation = [
     { name: 'Your Profile', href: '#' },
     { name: 'Settings', href: '#' },
     { name: 'Sign out', href: '#' },
 ]
 const projects = [
-    {
-        name: 'Workcation',
-        href: '#',
-        siteHref: '#',
-        repoHref: '#',
-        repo: 'debbielewis/workcation',
-        tech: 'Laravel',
-        lastDeploy: '3h ago',
-        location: 'United states',
-        starred: true,
-        active: true,
-    },
+    // {
+    //     name: 'Workcation',
+    //     href: '#',
+    //     siteHref: '#',
+    //     repoHref: '#',
+    //     repo: 'debbielewis/workcation',
+    //     tech: 'Laravel',
+    //     lastDeploy: '3h ago',
+    //     location: 'United states',
+    //     starred: true,
+    //     active: true,
+    // },
     // More projects...
 ]
 const activityItems = [
@@ -236,7 +259,65 @@ const activityItems = [
     // More items...
 ]
 
+const people = [
+  {
+    name: 'Lindsay Walton',
+    handle: 'lindsaywalton',
+    email: 'lindsaywalton@example.com',
+    role: 'Front-end Developer',
+    imageId: '1517841905240-472988babdf9',
+    imageUrl:
+      'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  },
+  {
+    name: 'Courtney Henry',
+    handle: 'courtneyhenry',
+    email: 'courtneyhenry@example.com',
+    role: 'Designer',
+    imageId: '1438761681033-6461ffad8d80',
+    imageUrl:
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  },
+  {
+    name: 'Tom Cook',
+    handle: 'tomcook',
+    email: 'tomcook@example.com',
+    role: 'Director, Product Development',
+    imageId: '1472099645785-5658abf4ff4e',
+    imageUrl:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  },
+  {
+    name: 'Whitney Francis',
+    handle: 'whitneyfrancis',
+    email: 'whitneyfrancis@example.com',
+    role: 'Copywriter',
+    imageId: '1517365830460-955ce3ccd263',
+    imageUrl:
+      'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  },
+  {
+    name: 'Leonard Krasner',
+    handle: 'leonardkrasner',
+    email: 'leonardkrasner@example.com',
+    role: 'Senior Designer',
+    imageId: '1519345182560-3f2917c472ef',
+    imageUrl:
+      'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  },
+  {
+    name: 'Floyd Miles',
+    handle: 'floydmiles',
+    email: 'floydmiles@example.com',
+    role: 'Principal Designer',
+    imageId: '1463453091185-61582044d556',
+    imageUrl:
+      'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  },
+]
+
 export default {
+    props: ['user'],
     components: {
         Disclosure,
         DisclosureButton,
@@ -254,6 +335,13 @@ export default {
         SortAscendingIcon,
         StarIcon,
         XIcon,
+        PlusIcon,
+        Dialog,
+        DialogOverlay,
+        DialogTitle,
+        TransitionChild,
+        TransitionRoot,
+        ExclamationIcon,
     },
     setup() {
         return {
@@ -261,7 +349,22 @@ export default {
             userNavigation,
             projects,
             activityItems,
+            people
         }
     },
+    data() {
+        return {
+            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            profileIcon: null
+        }
+    },
+
+    created()
+    {
+        this.profileIcon = `https://ui-avatars.com/api/?name=${this.user.name.replace(' ', '+')}&background=0D8ABC&color=fff`;
+    },
+    methods: {
+
+    }
 }
 </script>

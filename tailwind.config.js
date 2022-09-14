@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+
+const colors = require('tailwindcss/colors')
 module.exports = {
     content: [
         "./resources/**/*.blade.php",
@@ -6,7 +8,11 @@ module.exports = {
         "./resources/**/*.vue",
     ],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                sky: colors.sky,
+            }
+        },
     },
   plugins: [
     require('tailwindcss'),

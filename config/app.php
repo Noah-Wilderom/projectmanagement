@@ -195,7 +195,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
-        GrahamCampbell\GitHub\GitHubServiceProvider::class
+        GrahamCampbell\GitHub\GitHubServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
 

@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('webhooks', function (Blueprint $table) {
             $table->id();
+            $table->longText('key');
             $table->timestamps();
         });
     }

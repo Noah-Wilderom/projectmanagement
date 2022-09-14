@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -24,6 +25,8 @@ Route::get('/', function () {
 Route::controller(DashboardController::class)->middleware(['auth'])->name('dashboard.')->group(function () {
     Route::get('/dashboard', 'index')->name('index');
 });
+
+Route::resource('project', ProjectController::class);
 
 // Authentication Routes...
 Route::controller(LoginController::class)->group(function () {

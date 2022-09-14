@@ -41,7 +41,7 @@
                   <div>
                     <MenuButton class="bg-indigo-700 flex text-sm rounded-full text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-700 focus:ring-white">
                       <span class="sr-only">Open user menu</span>
-                      <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=256&h=256&q=80" alt="" />
+                      <img class="h-8 w-8 rounded-full" :src="profileIcon" alt="" />
                     </MenuButton>
                   </div>
                   <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
@@ -93,7 +93,8 @@
   import { MenuAlt1Icon, XIcon } from '@heroicons/vue/outline'
 
   const navigation = [
-    { name: 'Dashboard', href: '#', current: true },
+    { name: 'Dashboard', href: '/dashboard', current: true },
+    { name: 'Projects', href: '/project', current: false },
     { name: 'Domains', href: '#', current: false },
   ]
   const userNavigation = [
@@ -121,7 +122,9 @@
     // More items...
   ]
 
+
   export default {
+    props: ['user'],
     components: {
       Disclosure,
       DisclosureButton,
@@ -150,6 +153,11 @@
     },
     data: () => ({
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        profileIcon: null
     }),
+
+    created() {
+        this.profileIcon = `https://ui-avatars.com/api/?name=${this.user.name.replace(' ', '+')}&background=0D8ABC&color=fff`;
+    }
   }
   </script>

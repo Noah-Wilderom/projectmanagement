@@ -15,7 +15,7 @@
 
  const app = createApp({});
 
- import NotificationComponent from './components/NotificationComponent.vue';
+ import NotificationComponent from './components/partials/NotificationComponent.vue';
  app.component('notification', NotificationComponent);
 
  import NavigationComponent from './components/NavigationComponent.vue';

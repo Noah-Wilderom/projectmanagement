@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
+use Illuminate\Support\Str;
+use App\Models\Organisation;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 
@@ -33,10 +35,13 @@ class SuperUser extends Command
         $email = $this->ask('Email: ');
         $password = Hash::make($this->secret('Password: '));
 
+        $organisation = Organisation::firstOrCreate(['slug' => Str::slug('Super Admin Group'), 'name' => 'Super Admin Group']);
+
         $user = User::create([
             'name' => $name,
             'email' => $email,
-            'password' => $password
+            'password' => $password,
+            'organisation_id' => $organisation->id
         ]);
 
         $user->assignRole('Super Admin');

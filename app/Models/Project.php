@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Organisation extends Model
+class Project extends Model
 {
     use HasFactory;
 
@@ -22,8 +22,8 @@ class Organisation extends Model
         return LogOptions::defaults()->logAll();
     }
 
-    public function users()
+    public function organisation()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(Organisation::class);
     }
 }

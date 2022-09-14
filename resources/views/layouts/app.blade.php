@@ -16,17 +16,18 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/sass/_app.scss'])
     @stack('styles')
+    @livewireStyles
 </head>
 
 <body class="h-full">
     <div id="app">
         <div id="app-container">
-            <div>
+            <div class="h-screen">
                 {{-- <div class="fixed top-0 left-0 w-1/2 h-full bg-white" aria-hidden="true"></div>
                 <div class="fixed top-0 right-0 w-1/2 h-full bg-gray-50" aria-hidden="true"></div> --}}
                 <div class="relative min-h-full flex flex-col">
                     <!-- Navbar -->
-                    <navigation ></navigation>
+                    <navigation :user="{{ Auth::user() }}" ></navigation>
                     @yield('content')
                 </div>
             </div>
@@ -42,6 +43,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     @stack('scripts')
+    @livewireScripts
 </body>
 
 </html>

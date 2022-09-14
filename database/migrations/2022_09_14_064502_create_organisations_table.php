@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('organisations', function (Blueprint $table) {
             $table->id();
+            $table->string('slug');
+            $table->string('name');
             $table->timestamps();
         });
     }
