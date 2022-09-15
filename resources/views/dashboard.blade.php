@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-    <dashboard :user="{{ Auth::user() }}"></dashboard>
+    <dashboard :user="{{ $user }}"></dashboard>
 @endsection
